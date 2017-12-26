@@ -134,7 +134,7 @@ class Polygon {
 
         foreach ($this->polygons_internal as $polygon_internal) {
             if ($polygon_internal instanceof Polygon) {
-                $coordinates   = $polygon_internal->getCoordinates();
+                $coordinates   = $polygon_internal->getCoordinates()[0];
                 $previousPoint = reset($coordinates);
 
                 while ($point = next($coordinates)) {
