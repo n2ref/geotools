@@ -11,13 +11,13 @@ class Coordinate {
     const ERROR_COORDINATES = 10;
 
     /**
-     * @var float
+     * @var string
      */
     protected $lat;
 
 
     /**
-     * @var float
+     * @var string
      */
     protected $lng;
 
@@ -30,21 +30,21 @@ class Coordinate {
      */
     public function __construct($lat, $lng) {
 
-        if ( ! $this->isValidLatitude($lat)) {
+        if ( ! self::isValidLatitude($lat)) {
             throw new \InvalidArgumentException("Latitude value must be numeric -90.0 .. +90.0 (given: {$lat})", self::ERROR_COORDINATES);
         }
 
-        if ( ! $this->isValidLongitude($lng)) {
+        if ( ! self::isValidLongitude($lng)) {
             throw new \InvalidArgumentException("Longitude value must be numeric -180.0 .. +180.0 (given: {$lng})", self::ERROR_COORDINATES);
         }
 
-        $this->lat = doubleval($lat);
-        $this->lng = doubleval($lng);
+        $this->lat = (string)$lat;
+        $this->lng = (string)$lng;
     }
 
 
     /**
-     * @return float
+     * @return string
      */
     public function getLat() {
         return $this->lat;
@@ -52,7 +52,7 @@ class Coordinate {
 
 
     /**
-     * @return float
+     * @return string
      */
     public function getLng() {
         return $this->lng;
@@ -63,27 +63,27 @@ class Coordinate {
      * @return array
      */
     public function getCoordinates() {
-        return [$this->lat, $this->getLng()];
+        return [$this->lat, $this->lng];
     }
 
 
     /**
      * Validates latitude
-     * @param float $latitude
+     * @param float|string $latitude
      * @return bool
      */
-    public function isValidLatitude($latitude) {
-        return $this->isNumericInBounds($latitude, -90.0, 90.0);
+    public static function isValidLatitude($latitude) {
+        return self::isNumericInBounds($latitude, -90.0, 90.0);
     }
 
 
     /**
      * Validates longitude
-     * @param float $longitude
+     * @param float|string $longitude
      * @return bool
      */
-    public function isValidLongitude($longitude) {
-        return $this->isNumericInBounds($longitude, -180.0, 180.0);
+    public static function isValidLongitude($longitude) {
+        return self::isNumericInBounds($longitude, -180.0, 180.0);
     }
 
 
@@ -95,9 +95,13 @@ class Coordinate {
      * @param float $upper
      * @return bool
      */
-    protected function isNumericInBounds($value, $lower, $upper) {
+    protected static function isNumericInBounds($value, $lower, $upper) {
 
         if ( ! is_numeric($value)) {
+            return false;
+        }
+
+        if ( ! preg_match('~^\-?\d[\d\.]*$~', $value)) {
             return false;
         }
 
